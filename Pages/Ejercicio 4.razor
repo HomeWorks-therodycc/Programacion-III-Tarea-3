@@ -1,0 +1,46 @@
+﻿@page "/Ejercicio4"
+
+<h3>Ejercicio_4</h3>
+<br />
+<h6>Programa que acepte el codigo de un video de youtube, mostrar en la pagina el video con opcion a reproducir. Ejemplo ICfaQ8mSppM</h6>
+
+<br />
+
+<input class="form-control form-control-lg" type="text" placeholder="Codigo youtube " aria-label=".form-control-lg example" @bind-value="@codigo">
+<br />
+<button @onclick="mostrar" class="btn btn-success form-control form-control-lg" type="button">Mostrar video</button>
+<br />
+<br />
+<div class="card mb-12 shadow-lg p-3 mb-5 bg-white rounded">
+    <div class="row g-0">
+        <div class="col-md-12 ">
+            <div class="card-body" style="margin:auto;">
+                <iframe width="560" height="315" src="@muestra" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="margin:auto;"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+@code {
+
+
+    string Youtube = "https://www.youtube.com/embed/";
+    string codigo = "";
+    string muestra = "";
+
+    public void mostrar()
+    {
+        muestra = Youtube + codigo;
+    }
+}

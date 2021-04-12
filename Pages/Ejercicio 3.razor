@@ -1,0 +1,103 @@
+﻿@page "/Ejercicio3"
+
+
+@using System.Net.Http;
+@using System.Net.Http.Json;
+@using Newtonsoft.Json;
+@using System.Net;
+
+
+<h3>Ejercicio_3</h3>
+<br />
+<h6>Programa que acepte una palabra o frase en espaniol, mostrarla en ingles. </h6>
+
+<br />
+
+<input @bind-value="frase" class="form-control form-control-lg" type="text" placeholder="Inserte una frase " aria-label=".form-control-lg example">
+<br />
+<button class="btn btn-success form-control form-control-lg" type="button" @onclick="traducirr">Traducir</button>
+<br />
+<br />
+
+@if (frase != null)
+{
+
+<div class="card mb-12 shadow-lg p-3 mb-5 bg-white rounded">
+    <div class="row g-0">
+        <div class="col-md-12">
+            <div class="card-body">
+                <h4> @Frasetraducida</h4>
+            </div>
+        </div>
+    </div>
+</div>
+}
+
+
+@code {
+
+        static string frase = "";
+        string Frasetraducida;
+
+    // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
+    public class ResponseData
+    {
+        public string translatedText { get; set; }
+        public double match { get; set; }
+    }
+
+    public class Match
+    {
+        public string id { get; set; }
+        public string segment { get; set; }
+        public string translation { get; set; }
+        public string source { get; set; }
+        public string target { get; set; }
+        public string quality { get; set; }
+        public object reference { get; set; }
+        [JsonProperty("usage-count")]
+        public int UsageCount { get; set; }
+        public string subject { get; set; }
+        [JsonProperty("created-by")]
+        public string CreatedBy { get; set; }
+        [JsonProperty("last-updated-by")]
+        public string LastUpdatedBy { get; set; }
+        [JsonProperty("create-date")]
+        public string CreateDate { get; set; }
+        [JsonProperty("last-update-date")]
+        public string LastUpdateDate { get; set; }
+        public double match { get; set; }
+    }
+
+    public class Root
+    {
+        public ResponseData responseData { get; set; }
+        public bool quotaFinished { get; set; }
+        public object mtLangSupported { get; set; }
+        public string responseDetails { get; set; }
+        public int responseStatus { get; set; }
+        public string responderId { get; set; }
+        public object exception_code { get; set; }
+        public List<Match> matches { get; set; }
+    }
+
+
+    Root traductor;
+
+    async Task traducirr()
+    {
+        var Api = "https://api.mymemory.translated.net/get?q=" + frase + "!&langpair=es|en";
+        WebClient web = new WebClient();
+        var dt = web.DownloadString(Api);
+        traductor = JsonConvert.DeserializeObject<Root>(dt);
+
+        Frasetraducida = traductor.responseData.translatedText;
+    }
+
+}
+
+
+
+
+
+

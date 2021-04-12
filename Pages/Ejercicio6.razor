@@ -1,0 +1,133 @@
+﻿@page "/Ejercicio6"
+@using System.Net.Http;
+@using System.Net.Http.Json;
+@using System.Collections;
+@inject HttpClient Http;
+
+<h3>Ejercicio6</h3>
+<br />
+<h6>Programa que muestre los ultimos 5 videos que usted ha subido a su canal de youtube. (Este programa debe actualizarse de manera automatica, usando el api de youtube)</h6>
+<button type="button" class="btn btn-success form-control" @onclick="Youtube">OK</button>
+
+<br />
+<br />
+
+
+<br>
+@if (verificar != null && verificar.pageInfo.totalResults > 0)
+{
+    @foreach (Item video in verificar.items)
+    {
+       
+<div class="alert alert-info" role="alert">
+    <div class="alert alert-dark" role="alert">
+        <p>@video.snippet.title</p>
+    </div>
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/@video.id.videoId" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+   
+
+ </div>
+    }
+    }
+
+
+    <div class="alert alert-info" role="alert">
+        <h3>@resultado</h3>
+    </div>
+
+    @code {
+
+        string resultado;
+
+
+public class PageInfo
+{
+    public int totalResults { get; set; }
+    public int resultsPerPage { get; set; }
+}
+
+public class Id
+{
+    public string kind { get; set; }
+    public string videoId { get; set; }
+    public string playlistId { get; set; }
+}
+
+public class Default
+{
+    public string url { get; set; }
+    public int width { get; set; }
+    public int height { get; set; }
+}
+
+public class Medium
+{
+    public string url { get; set; }
+    public int width { get; set; }
+    public int height { get; set; }
+}
+
+public class High
+{
+    public string url { get; set; }
+    public int width { get; set; }
+    public int height { get; set; }
+}
+
+public class Thumbnails
+{
+
+    public Medium medium { get; set; }
+    public High high { get; set; }
+}
+
+public class Snippet
+{
+    public DateTime publishedAt { get; set; }
+    public string channelId { get; set; }
+    public string title { get; set; }
+    public string description { get; set; }
+    public Thumbnails thumbnails { get; set; }
+    public string channelTitle { get; set; }
+    public string liveBroadcastContent { get; set; }
+}
+
+public class Item
+{
+    public string kind { get; set; }
+    public string etag { get; set; }
+    public Id id { get; set; }
+    public Snippet snippet { get; set; }
+}
+
+public class Root
+{
+    public string kind { get; set; }
+    public string etag { get; set; }
+    public string nextPageToken { get; set; }
+    public PageInfo pageInfo { get; set; }
+    public IList<Item> items { get; set; }
+}
+
+Root verificar = null;
+
+async Task Youtube()
+{
+    verificar = await Http.GetFromJsonAsync<Root>("https://www.googleapis.com/youtube/v3/search?key=AIzaSyDZ6uMiptS_GGsQ0SDoLbQT4F5LZDHq2Eo&channelId=UClXSM4K40ZslZExF8ZFEcbg&part=snippet,id&order=date&maxResults=5");
+
+
+
+    if (verificar.pageInfo.totalResults > 0)
+    {
+
+        resultado = (verificar.items.Count()).ToString();
+    }
+    else
+    {
+        resultado = "No hay videos";
+    }
+}
+
+    }
+
+

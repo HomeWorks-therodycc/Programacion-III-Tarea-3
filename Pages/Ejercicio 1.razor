@@ -1,0 +1,133 @@
+﻿@using Newtonsoft.Json;
+@using System;
+@using System.Collections.Generic;
+@page "/Ejercicio1"
+
+
+<h3>Ejercicio_1</h3>
+<br />
+<h6>Programa que acepte una cedula, y muestre los datos de la persona: nombre, apellido, fecha de nacimiento, foto y signo del zodiaco.</h6>
+<br />
+
+<input @bind-value="Cedula" class="form-control form-control-lg" type="text" placeholder="Cedula" aria-label=".form-control-lg example">
+<br />
+<button @onclick="@mostrar" class="btn btn-success form-control form-control-lg" type="button">Mostrar</button>
+<br />
+<br />
+@if (Cedula!= null )
+{
+<div class="card mb-12 shadow-lg p-3 mb-5 bg-white rounded">
+    <div class="row g-0">
+        <div class="col-md-2">
+            <img src="@imagen" alt="..." style="height:auto; object-fit:cover; width:auto;">
+        </div>
+        <div class="col-md-10 ">
+            <div class="card-body">
+                <h5 class="card-title form-control btn-dark">@nombre</h5>
+                <h5 class="card-title form-control btn-dark ">@apellido</h5>
+                <h5 class="card-title form-control btn-dark">@Fecha_nacimiento</h5>
+                <h5 class="card-title form-control btn-dark">@numcedula</h5>
+                <h5 class="card-title form-control btn-dark">@zodiaco1</h5>
+            </div>
+        </div>
+    </div>
+</div>
+}
+@code {
+    string nombre = "";
+    string apellido = "";
+    string imagen = "";
+    string Fecha_nacimiento;
+    string zodiaco1;
+    string zodiaco;
+    DateTime Fechazodiaco;
+    string Cedula;
+    string numcedula = "";
+
+    public RootCedula Buscar(string cedula)
+    {
+
+        string link = "https://api.adamix.net/apec/cedula/" + cedula;
+
+        System.Net.WebClient wc = new System.Net.WebClient();
+        string json = wc.DownloadString(link);
+
+        var personaAPI = JsonConvert.DeserializeObject<RootCedula>(json);
+
+        return  personaAPI;
+    }
+
+
+
+    void mostrar()
+    {
+        if ((Fechazodiaco.Month == 1 && Fechazodiaco.Day >= 20) || (Fechazodiaco.Month == 2 && Fechazodiaco.Day <= 18))
+        {
+            zodiaco = "Acuario";
+        
+        }
+        if ((Fechazodiaco.Month == 2 && Fechazodiaco.Day >= 19) || (Fechazodiaco.Month == 3 && Fechazodiaco.Day <= 20))
+        {
+            zodiaco = "Piscis";
+    
+        }
+        if ((Fechazodiaco.Month == 3 && Fechazodiaco.Day >= 21) || (Fechazodiaco.Month == 4 && Fechazodiaco.Day <= 19))
+        {
+            zodiaco = "Aries";
+      
+        }
+        if ((Fechazodiaco.Month == 4 && Fechazodiaco.Day >= 20) || (Fechazodiaco.Month == 5 && Fechazodiaco.Day <= 20))
+        {
+            zodiaco = "Tauro";
+    
+        }
+        if ((Fechazodiaco.Month == 5 && Fechazodiaco.Day >= 21) || (Fechazodiaco.Month == 6 && Fechazodiaco.Day <= 20))
+        {
+            zodiaco = "Geminis";
+      
+        }
+        if ((Fechazodiaco.Month == 6 && Fechazodiaco.Day >= 21) || (Fechazodiaco.Month == 7 && Fechazodiaco.Day <= 22))
+        {
+            zodiaco = "Cancer";
+ 
+        }
+        if ((Fechazodiaco.Month == 7 && Fechazodiaco.Day >= 23) || (Fechazodiaco.Month == 8 && Fechazodiaco.Day <= 22))
+        {
+            zodiaco = "Leo";
+  
+        }
+        if ((Fechazodiaco.Month == 8 && Fechazodiaco.Day >= 23) || (Fechazodiaco.Month == 9 && Fechazodiaco.Day <= 22))
+        {
+            zodiaco = "Virgo";
+
+        }
+        if ((Fechazodiaco.Month == 9 && Fechazodiaco.Day >= 23) || (Fechazodiaco.Month == 10 && Fechazodiaco.Day <= 22))
+        {
+            zodiaco = "Libra";
+      
+        }
+        if ((Fechazodiaco.Month == 10 && Fechazodiaco.Day >= 23) || (Fechazodiaco.Month == 11 && Fechazodiaco.Day <= 21))
+        {
+            zodiaco = "Escorpio";
+
+        }
+        if ((Fechazodiaco.Month == 11 && Fechazodiaco.Day >= 22) || (Fechazodiaco.Month == 12 && Fechazodiaco.Day <= 21))
+        {
+            zodiaco = "Sagitario";
+
+        }
+        if ((Fechazodiaco.Month == 12 && Fechazodiaco.Day >= 22) || (Fechazodiaco.Month == 1 && Fechazodiaco.Day <= 19))
+        {
+            zodiaco = "Capricornio";
+   
+        }
+
+        nombre = Buscar(Cedula).Nombres;
+        apellido = Buscar(Cedula).Apellido1 + " " + Buscar(Cedula).Apellido2;
+        imagen = Buscar(Cedula).foto;
+        Fecha_nacimiento = Buscar(Cedula).FechaNacimiento;
+        numcedula = Buscar(Cedula).Cedula;
+
+        zodiaco1 =  zodiaco.ToString();
+    }
+}
